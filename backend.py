@@ -15,7 +15,7 @@ class StarNode:
 def load_stars(filepath):
     nodes = []
     with open(filepath, 'r', newline='', encoding='utf-8') as file:
-        reader = csv.DictReader(file)  # Use DictReader for easier access
+        reader = csv.DictReader(file)
         for row in reader:
             newStar = StarNode(
                 id=int(row['id']),  
