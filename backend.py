@@ -4,6 +4,7 @@ from scipy.spatial import KDTree
 import math
 import heapq
 
+# Container for star data
 class StarNode:
     def __init__(self, id, x, y, z, **metadata):
         self.id = id
@@ -12,6 +13,7 @@ class StarNode:
         self.z = z
         self.metadata = metadata
 
+# Loads in stars from CSV file to be put into a graph
 def load_stars(filepath):
     nodes = []
     with open(filepath, 'r', newline='', encoding='utf-8') as file:
@@ -29,6 +31,7 @@ def load_stars(filepath):
             nodes.append(newStar)
     return nodes
 
+# Makes a KD tree to initialize stars for the frontend
 def build_kdtree_data(nodes):
     # Extract positions as numpy array
     positions = np.array([[node.x, node.y, node.z] for node in nodes])
@@ -55,6 +58,7 @@ def build_kdtree_data(nodes):
         'count': len(nodes)
     }
 
+# Builds a graph represented by an adjacency list using a KD tree
 def build_graph(nodes, fuel):
     positions = np.array([[node.x, node.y, node.z] for node in nodes])
     kdtree = KDTree(positions)
@@ -68,6 +72,7 @@ def build_graph(nodes, fuel):
    
     return graph
 
+# 3D Euclidean distance formula
 def distance(nodes, star1, star2):
     star1 = nodes[star1]
     star2 = nodes[star2]
@@ -75,6 +80,7 @@ def distance(nodes, star1, star2):
     star2 = [star2.x, star2.y, star2.z]
     return math.dist(star1, star2)
 
+# Calculates shortest path
 def djikstras(nodes, graph, startStar, goalStar):
     dist = []
     min_heap = []
@@ -102,7 +108,6 @@ def djikstras(nodes, graph, startStar, goalStar):
                 parent[v] = u
                 heapq.heappush(min_heap, (new_dist, v))
 
-
     if dist[goalStar] == math.inf:
         return ([], -1)
 
@@ -115,6 +120,7 @@ def djikstras(nodes, graph, startStar, goalStar):
 
     return (sequence, dist[goalStar])
 
+# Calculates shortest path
 def astar(nodes, graph, startStar, goalStar):
     open_heap = []
     heapq.heappush(open_heap, (0, startStar))
