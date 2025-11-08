@@ -29,5 +29,5 @@ Server runs at: `http://localhost:8000`
 - `GET /api/health` - Health check
 - `GET /api/stars` - Get star count
 - `GET /api/stars/all` - Get all stars with KD-tree data
-- `GET /api/dijkstra?fuel=30&start=0&end=1` - Dijkstra's pathfinding
-- `GET /api/astar?fuel=30&start=0&end=1` - A* pathfinding
+- `GET /api/dijkstra?fuel={fuel}&start={start}&end={end}` - Dijkstra's pathfinding
+- `GET /api/astar?fuel={fuel}&start={start}&end={end}` - A* pathfinding
