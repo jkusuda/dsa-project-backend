@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
 from backend import *
+import os
 
 app = FastAPI(
     title="JourneyToTheEye Backend",
@@ -11,7 +12,8 @@ app = FastAPI(
 
 # Load star nodes once
 def get_star_nodes():
-    filepath = "public/stars.csv"
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    filepath = os.path.join(base_dir, "public", "stars.csv")
     star_nodes = load_stars(filepath)
     print(f"Loaded {len(star_nodes)} stars")
     return star_nodes
@@ -31,8 +33,7 @@ def dijkstra_call(fuel: float = 30, start: int = 0, end: int = 1):
     return {
         "sequence": [nodes[i].id for i in index_sequence],
         "distance": distance,
-        "algorithm": "dijkstra",
-        "timestamp": "2024-01-01T00:00:00Z"
+        "algorithm": "dijkstra"
     }
 
 
@@ -45,8 +46,7 @@ def astar_call(fuel: float = 30, start: int = 0, end: int = 1):
     return {
         "sequence": [nodes[i].id for i in index_sequence],
         "distance": distance,
-        "algorithm": "astar",
-        "timestamp": "2024-01-01T00:00:00Z"
+        "algorithm": "astar"
     }
 
 
@@ -56,14 +56,12 @@ def get_sample_stars():
         nodes = get_star_nodes()
         return {
             "status": "running",
-            "star_count": len(nodes),
-            "timestamp": "2024-01-01T00:00:00Z"
+            "star_count": len(nodes)
         }
     except Exception as e:
         return {
             "status": "error",
-            "error": str(e),
-            "timestamp": "2024-01-01T00:00:00Z"
+            "error": str(e)
         }
 
 
@@ -72,6 +70,5 @@ def get_all_stars():
 
     return {
         "data": build_kdtree_data(get_star_nodes()),
-        "total": len(get_star_nodes()),
-        "timestamp": "2024-01-01T00:00:00Z"
+        "total": len(get_star_nodes())
     }
