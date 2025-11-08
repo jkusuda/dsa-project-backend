@@ -3,15 +3,15 @@ from fastapi.responses import HTMLResponse
 from backend import *
 
 app = FastAPI(
-    title="Vercel + FastAPI",
-    description="Vercel + FastAPI",
+    title="JourneyToTheEye Backend",
+    description="FastAPI backend for our star visualization.",
     version="1.0.0",
 )
 
 
 # Load star nodes once
 def get_star_nodes():
-    filepath = "../public/stars.csv"
+    filepath = "public/stars.csv"
     star_nodes = load_stars(filepath)
     print(f"Loaded {len(star_nodes)} stars")
     return star_nodes
