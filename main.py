@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
 from backend import *
-import os
+from pathlib import Path
 
 app = FastAPI(
     title="JourneyToTheEye Backend",
@@ -12,9 +12,9 @@ app = FastAPI(
 
 # Load star nodes once
 def get_star_nodes():
-    base_dir = os.path.dirname(os.path.abspath(__file__))
-    filepath = os.path.join(base_dir, "public", "stars.csv")
-    star_nodes = load_stars(filepath)
+    base_dir = Path(__file__).parent
+    filepath = base_dir / "stars.csv"
+    star_nodes = load_stars(str(filepath))
     print(f"Loaded {len(star_nodes)} stars")
     return star_nodes
 
@@ -22,6 +22,13 @@ def get_star_nodes():
 # Cache graphs by fuel range
 def get_graph(fuel: float):
     return build_graph(get_star_nodes(), fuel)
+
+
+@app.get("/api/health")
+def health():
+    return { 
+            "running" 
+        }
 
 
 @app.get("/api/dijkstra")
