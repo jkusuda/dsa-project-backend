@@ -10,7 +10,7 @@ class StarNode:
         self.x = x
         self.y = y
         self.z = z
-        self.metadata = metadata  # store any extra columns
+        self.metadata = metadata
 
 def load_stars(filepath):
     nodes = []
@@ -46,7 +46,7 @@ def build_kdtree_data(nodes):
         for node in nodes
     ]
     return {
-        'positions': positions.tolist(),  # [[x,y,z], ...]
+        'positions': positions.tolist(),
         'metadata': metadata,
         'bounds': {
             'min': positions.min(axis=0).tolist(),
@@ -56,12 +56,9 @@ def build_kdtree_data(nodes):
     }
 
 def build_graph(nodes, fuel):
-    # k-d tree - O(n log n)
     positions = np.array([[node.x, node.y, node.z] for node in nodes])
     kdtree = KDTree(positions)
    
-    # Query all neighbors within fuel distance for each star
-    # Returns list of lists of neighbor indices
     graph = kdtree.query_ball_tree(kdtree, fuel)
    
     # Remove self from neighbors
@@ -70,19 +67,6 @@ def build_graph(nodes, fuel):
             graph[i].remove(i)
    
     return graph
-
-def get_neighbors(nodes, kdtree, star_index, fuel):
-    position = np.array([[nodes[star_index].x, nodes[star_index].y, nodes[star_index].z]])
-    distances, indices = kdtree.query(position, k=100, distance_upper_bound=fuel)
-   
-    # Filter out infinity distances and self
-    valid_neighbors = [
-        {'index': int(idx), 'distance': float(dist)}
-        for dist, idx in zip(distances[0], indices[0])
-        if dist != np.inf and idx != star_index
-    ]
-   
-    return valid_neighbors
 
 def distance(nodes, star1, star2):
     star1 = nodes[star1]
